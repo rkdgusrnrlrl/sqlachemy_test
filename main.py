@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from models import Base
 
+
 async def async_main() -> None:
     engine = create_async_engine('sqlite+aiosqlite://', echo=True)
     async with engine.begin() as conn:

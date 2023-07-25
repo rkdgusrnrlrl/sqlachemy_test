@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Table, Column, String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -13,16 +13,28 @@ class Base(DeclarativeBase):
     pass
 
 
-class Parent(Base):
-    __tablename__ = "parent_table"
+association_table = Table(
+    "association_table",
+    Base.metadata,
+    Column("prod_id", ForeignKey("product.id")),
+    Column("cate_id", ForeignKey("category.id")),
+)
+
+
+class Product(Base):
+    __tablename__ = "product"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    children: Mapped[List["Child"]] = relationship(back_populates="parent")
+    name: Mapped[str]
 
 
-class Child(Base):
-    __tablename__ = "child_table"
+class Category(Base):
+    __tablename__ = "category"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    parent_id: Mapped[int] = mapped_column(ForeignKey("parent_table.id"))
-    parent: Mapped["Parent"] = relationship(back_populates="children")
+    name: Mapped[str]
+    products: Mapped[List[Product]] = relationship(
+        secondary=association_table,
+        cascade="all, delete"
+    )
+

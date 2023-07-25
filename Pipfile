@@ -7,6 +7,8 @@ name = "pypi"
 aiosqlite = "*"
 mypy = "*"
 sqlalchemy = {extras = ["mypy"], version = "*"}
+pytest = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
